@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['uonline.newcastle.edu.au','bold.newcastle.edu.au', 'bold-space.newcastle.edu.au']
 
 # Application definition
 
@@ -74,7 +74,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DALITE_DB_NAME', 'dalite_ng'),
         'USER': os.environ.get('DALITE_DB_USER', 'dalite'),
-        'PASSWORD': os.environ.get('DALITE_DB_PASSWORD', ''),
+        'PASSWORD': os.environ.get('DALITE_DB_PASSWORD', 'QI9UgGUn2S'),
     }
 }
 
@@ -95,12 +95,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/dalite-ng/static/'
+MEDIA_URL = '/dalite-ng/media/'
+STATIC_ROOT = '/var/www/dalite-ng/static'
+#STATIC_ROOT = os.path.join(BASE_DIR, '../peerinst/static/peerinst')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = 'admin:login'
+LOGIN_URL = "dalite-ng:admin:login"
 
 GRAPPELLI_ADMIN_TITLE = 'Dalite NG administration'
 
@@ -141,14 +142,14 @@ LOGGING = {
 # LTI integration
 
 # these are sensitive settings, so it is better to fail early than use some defaults visible on public repo
-LTI_CLIENT_KEY = os.environ.get('LTI_CLIENT_KEY', None)
-LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', None)
+LTI_CLIENT_KEY = os.environ.get('LTI_CLIENT_KEY', 'RKab0tOvuj')
+LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', '8KEi1eOHgC')
 
 # hint: LTi passport in edX Studio should look like <arbitrary_label>:LTI_CLIENT_KEY:LTI_CLIENT_SECRET
 
 # Used to automatically generate stable passwords from anonymous user ids coming from LTI requests - keep secret as well
 # If compromised, attackers would be able to restore any student passwords knowing his anonymous user ID from LMS
-PASSWORD_GENERATOR_NONCE = os.environ.get('PASSWORD_GENERATOR_NONCE', None)
+PASSWORD_GENERATOR_NONCE = os.environ.get('PASSWORD_GENERATOR_NONCE', 'Qi7GDap6da')
 # LTI Integration end
 
 # Configureation file for the heartbeat view, should contain json file. See this url for file contents.
