@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'admin_index_wrapper/', views.admin_index_wrapper, name='admin_index_wrapper'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^lti/', include('django_lti_tool_provider.urls')),
+    url(r'^lti/', include('django_lti_tool_provider.urls')), #apache WSGI
+    #url(r'^dalite-ng/lti/', include('django_lti_tool_provider.urls')), for dev
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

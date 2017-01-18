@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import logging
+import pdb
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, get_permission_codename
@@ -98,6 +99,8 @@ class ApplicationHookManager(AbstractApplicationHookManager):
         # have no better option than to automatically generate password from user_id
         password = self._generate_password(user_id, settings.PASSWORD_GENERATOR_NONCE)
 
+        #logger.info("password: "+password)
+
         # username and email might be empty, depending on how edX LTI module is configured:
         # there are individual settings for that + if it's embedded into an iframe it never sends
         # email and username in any case
@@ -105,9 +108,11 @@ class ApplicationHookManager(AbstractApplicationHookManager):
         uname = self._compress_user_name(user_id)
         email = email if email else user_id+'@localhost'
         try:
+
             User.objects.get(username=uname)
         except User.DoesNotExist:
             try:
+
                 User.objects.create_user(username=uname, email=email, password=password)
             except IntegrityError as e:
                 # A result of race condition of multiple simultaneous LTI requests - should be safe to ignore,
@@ -120,7 +125,7 @@ class ApplicationHookManager(AbstractApplicationHookManager):
             self.update_staff_user(user)
 
         login(request, user)
-        
+
         # LTI sessions are created implicitly, and are not terminated when user logs out of Studio/LMS, which may lead
         # to granting access to unauthorized users in shared computer setting. Students have no way to terminate dalite
         # session (other than cleaning cookies). This setting instructs browser to clear session when browser is
@@ -136,7 +141,12 @@ class ApplicationHookManager(AbstractApplicationHookManager):
         :param dict extra_params: Additional parameters passed by LTI.
         :return: bool
         """
-        user_roles = set(extra_params.get("roles", set()))
+        try:
+            user_roles = set(extra_params.get("roles", set()))
+        except TypeError as e:
+            user_roles = "Learner";
+            logger.info("TypeError when attempting to fetch user roles. Are you accesing from the Blackboard dev version?")
+
         return bool(self.ADMIN_ACCESS_ROLES.intersection(user_roles))
 
     def update_staff_user(self, user):

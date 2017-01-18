@@ -19,11 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['uonline.newcastle.edu.au','bold.newcastle.edu.au', 'bold-space.newcastle.edu.au']
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
 INSTALLED_APPS = (
+    'django_pdb', # debugger	
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,6 +37,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django_pdb.middleware.PdbMiddleware', #debugger	
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -74,7 +76,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DALITE_DB_NAME', 'dalite_ng'),
         'USER': os.environ.get('DALITE_DB_USER', 'dalite'),
-        'PASSWORD': os.environ.get('DALITE_DB_PASSWORD', 'QI9UgGUn2S'),
+        'PASSWORD': os.environ.get('DALITE_DB_PASSWORD', 'vagrant'),
     }
 }
 
@@ -97,8 +99,7 @@ USE_TZ = True
 
 STATIC_URL = '/dalite-ng/static/'
 MEDIA_URL = '/dalite-ng/media/'
-STATIC_ROOT = '/var/www/dalite-ng/static'
-#STATIC_ROOT = os.path.join(BASE_DIR, '../peerinst/static/peerinst')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = "dalite-ng:admin:login"
@@ -142,8 +143,9 @@ LOGGING = {
 # LTI integration
 
 # these are sensitive settings, so it is better to fail early than use some defaults visible on public repo
-LTI_CLIENT_KEY = os.environ.get('LTI_CLIENT_KEY', 'RKab0tOvuj')
-LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', '8KEi1eOHgC')
+
+LTI_CLIENT_KEY = os.environ.get('LTI_CLIENT_KEY', '')
+LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', '')
 
 # hint: LTi passport in edX Studio should look like <arbitrary_label>:LTI_CLIENT_KEY:LTI_CLIENT_SECRET
 
