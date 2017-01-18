@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 
-
 def admin_index_wrapper(request):
     """
     Redirect to login page outside of an iframe, show help on enabling cookies inside an iframe.
@@ -15,4 +14,3 @@ def admin_index_wrapper(request):
         # We probably got here from within the Studio, and the user has third-party cookies disabled,
         # so we show help on enabling cookies for this site.
         return render_to_response('peerinst/cookie_help.html', dict(host=request.get_host()))
-
