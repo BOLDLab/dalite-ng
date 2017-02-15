@@ -1,3 +1,4 @@
+
 """
 Django settings for dalite project.
 
@@ -17,14 +18,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost']
-
+ALLOWED_HOSTS = ['localhost','bold.newcastle.edu.au','uonline.newcastle.edu.au', 'bold-space.newcastle.edu.au']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # for reverse proxy, forces Django to use https
 # Application definition
 
 INSTALLED_APPS = (
-    'django_pdb',	
+    #'django_pdb', # debugger
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,7 +38,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django_pdb.middleware.PdbMiddleware',	
+    #'django_pdb.middleware.PdbMiddleware', #debugger
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,7 +77,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DALITE_DB_NAME', 'dalite_ng'),
         'USER': os.environ.get('DALITE_DB_USER', 'dalite'),
-        'PASSWORD': os.environ.get('DALITE_DB_PASSWORD', 'vagrant'),
+        'PASSWORD': os.environ.get('DALITE_DB_PASSWORD', ''),
     }
 }
 
@@ -102,7 +103,7 @@ MEDIA_URL = '/dalite-ng/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = 'admin:login'
+LOGIN_URL = "dalite-ng:admin:login"
 
 GRAPPELLI_ADMIN_TITLE = 'Dalite NG administration'
 
@@ -143,6 +144,7 @@ LOGGING = {
 # LTI integration
 
 # these are sensitive settings, so it is better to fail early than use some defaults visible on public repo
+
 LTI_CLIENT_KEY = os.environ.get('LTI_CLIENT_KEY', '')
 LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', '')
 
@@ -150,7 +152,7 @@ LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', '')
 
 # Used to automatically generate stable passwords from anonymous user ids coming from LTI requests - keep secret as well
 # If compromised, attackers would be able to restore any student passwords knowing his anonymous user ID from LMS
-PASSWORD_GENERATOR_NONCE = os.environ.get('PASSWORD_GENERATOR_NONCE', None)
+PASSWORD_GENERATOR_NONCE = os.environ.get('PASSWORD_GENERATOR_NONCE', '')
 # LTI Integration end
 
 # Configureation file for the heartbeat view, should contain json file. See this url for file contents.
