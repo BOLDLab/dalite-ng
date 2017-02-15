@@ -33,6 +33,10 @@ Setting up the development server
         $ ./manage.py migrate
         $ ./manage.py createsuperuser
 
+      and don't forget!
+
+        $ ./manage.py collectstatic
+
 5. Run the Django development server.
 
         $ ./manage.py runserver
@@ -98,6 +102,19 @@ dalite$ ./manage.py createsuperuser
 ```shell
 dalite$ ./manage.py runserver 0.0.0.0:8321
 ```
+
+Notes for deploying as WSGI on Apache
+-------------------------------------
+Django will not pass the correct oAuth base string via the LTI module if you are behind a reverse proxy. The settings.py file also requires an extra variable to be set to make Django use HTTPS by adding this line.
+`SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')`
+
+Use [this gist](https://gist.github.com/sijpkes/7416619083a7756b3aeaa36e76290db2) to get started with deploying to Apache with WSGI for dalite.
+
+Blackboard Learn
+-----------------
+Set up dalite as per the edX settings below and use the[ Blackboard Learn official documentation](https://en-us.help.blackboard.com/Learn/Administrator/SaaS/Integrations/Learning_Tools_Interoperability#add-new) to set Dalite-NG as a Tool Provider and [place the link](https://en-us.help.blackboard.com/Learn/Administrator/SaaS/Integrations/Learning_Tools_Interoperability#Manage_placements).
+
+Use the launch parameters as per edX instructions below.
 
 Usage Example: Configuring Dalite in edX Studio
 -----------------------------------------------
@@ -206,39 +223,39 @@ dalite$ make coverage-report
 Deployment notes
 ----------------
 
-## Storage backends 
+## Storage backends
 
-### AWS 
+### AWS
 
-Dalite file upload has been tested with AWS S3  using `django-storages-redux`. 
- 
-TOOD: Describe how it works 
+Dalite file upload has been tested with AWS S3  using `django-storages-redux`.
+
+TOOD: Describe how it works
 
 ### Open Stack Swift
 
-Dalite file upload has been tested with OpenStack Swift using `django-storage-swift`, 
-to configure it you'll need to configure dalite, as well as set-up Swift on OpenStack 
-provider. 
+Dalite file upload has been tested with OpenStack Swift using `django-storage-swift`,
+to configure it you'll need to configure dalite, as well as set-up Swift on OpenStack
+provider.
 
 #### Swift setup
 
-* Create two publicly readable containers, one can be used for media uploads, second 
+* Create two publicly readable containers, one can be used for media uploads, second
   for staticfiles (this one is optional).
-* Note user credentials required, you might obtain these credentials using the OpenStack Horizon 
-  web-console (look for in the `Compute -> Access and Security` tab for `Download OpenStack RC file` 
+* Note user credentials required, you might obtain these credentials using the OpenStack Horizon
+  web-console (look for in the `Compute -> Access and Security` tab for `Download OpenStack RC file`
   button. This file, once sourced, will set-up OpenStack enviorment variables, that are
   read in the settings example below.   
 
-#### Dalite setup 
+#### Dalite setup
 
 To set it up you need to:
 
 * Install requirements from ``requirements/prod-openstack.txt``
 * Set up the `settings.py` file (extensive list of setting keys
   can be found in the [Django storage swift documentation]
-  (https://github.com/blacktorn/django-storage-swift#configuring). 
+  (https://github.com/blacktorn/django-storage-swift#configuring).
 
-Example file is here (it works  out of the box when you source the 
+Example file is here (it works  out of the box when you source the
 OpenStack rc file)
 
 ```
@@ -253,7 +270,7 @@ STATICFILES_STORAGE ='swift.storage.StaticSwiftStorage'
 SWIFT_STATIC_CONTAINER_NAME='static'
 
 # Credentials
-# This is the url to authentication endpoint of your OpenStack installation 
+# This is the url to authentication endpoint of your OpenStack installation
 SWIFT_AUTH_URL=os.environ["OS_AUTH_URL"]
 # Username for Swift authorization
 SWIFT_USERNAME=os.environ["OS_USERNAME"]
@@ -261,37 +278,37 @@ SWIFT_USERNAME=os.environ["OS_USERNAME"]
 SWIFT_KEY=os.environ["OS_PASSWORD"]
 # This is the auth version to use, on OVH I used version 2
 SWIFT_AUTH_VERSION=2
-# Tenant ID 
+# Tenant ID
 SWIFT_TENANT_ID=os.environ["OS_TENANT_ID"]
 # Region name, this one is optional
 SWIFT_EXTRA_OPTIONS = {
     'region_name': os.environ['OS_REGION_NAME']
 }
 ```
- 
+
 #### Testing Dalite with swift locally
 
 If you need to test Dalite with swift locally, [you might use this vagrant instance]
-(https://github.com/swiftstack/vagrant-swift-all-in-one), it will create a working swift VM that is usable 
-with Dalite. 
+(https://github.com/swiftstack/vagrant-swift-all-in-one), it will create a working swift VM that is usable
+with Dalite.
 
 
-# Release notes 
+# Release notes
 
 ## v0.0.2 (released at 2016-05-02)
 
-A backward-incompatible change have been introduced in this version, this change allows 
-users to run dalite on mysql 5.5, which has maximal key length of 767 bytes. 
+A backward-incompatible change have been introduced in this version, this change allows
+users to run dalite on mysql 5.5, which has maximal key length of 767 bytes.
 
 If you have a running dalite instance, you'll need to run following command manually
 (this command assumes dalite uses schema  `dalite_ng`):  
 
-     ALTER TABLE `dalite_ng`.`django_lti_tool_provider_ltiuserdata` 
+     ALTER TABLE `dalite_ng`.`django_lti_tool_provider_ltiuserdata`
      CHANGE COLUMN `custom_key` `custom_key` VARCHAR(190) NOT NULL ;
 
-Before running that command check that no row in 
-`django_lti_tool_provider_ltiuserdata` table contains more than 
-190 characters. You can the use following query: 
+Before running that command check that no row in
+`django_lti_tool_provider_ltiuserdata` table contains more than
+190 characters. You can the use following query:
 
      SELECT MAX(char_length(custom_key)) FROM django_lti_tool_provider_ltiuserdata;
 
