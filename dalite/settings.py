@@ -25,7 +25,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # for reverse prox
 # Application definition
 
 INSTALLED_APPS = (
-    #'django_pdb', # debugger
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +37,6 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    #'django_pdb.middleware.PdbMiddleware', #debugger
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -152,7 +150,11 @@ LTI_CLIENT_SECRET = os.environ.get('LTI_CLIENT_SECRET', '')
 
 # Used to automatically generate stable passwords from anonymous user ids coming from LTI requests - keep secret as well
 # If compromised, attackers would be able to restore any student passwords knowing his anonymous user ID from LMS
+<<<<<<< HEAD
 PASSWORD_GENERATOR_NONCE = os.environ.get('PASSWORD_GENERATOR_NONCE', '')
+=======
+PASSWORD_GENERATOR_NONCE = os.environ.get('PASSWORD_GENERATOR_NONCE', 'Qi7GDap6da')
+>>>>>>> 81192c8f565d2c238995f207cb6454a7c9ac715f
 # LTI Integration end
 
 # Configureation file for the heartbeat view, should contain json file. See this url for file contents.

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+#from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 
 import views
@@ -20,9 +21,3 @@ urlpatterns = [
      #url(r'^__debug__/', include(debug_toolbar.urls)),#apache WSGI
     #url(r'^dalite-ng/lti/', include('django_lti_tool_provider.urls')), for dev
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-        ]
